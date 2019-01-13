@@ -1,4 +1,4 @@
-package me.pandelis.shush
+package me.pandelis.shush.activity
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -9,8 +9,10 @@ import android.view.Menu
 import android.view.MenuItem
 
 import kotlinx.android.synthetic.main.activity_chat_list.*
+import me.pandelis.shush.R
 import me.pandelis.shush.adapters.ChatListItemAdapter
 import me.pandelis.shush.models.ChatListItem
+import me.pandelis.shush.models.Contact
 
 class ChatListActivity: AppCompatActivity() {
 
@@ -24,7 +26,7 @@ class ChatListActivity: AppCompatActivity() {
 
         chatList = ArrayList()
 
-        recyclerView = findViewById(R.id.messageListRecyclerView) as RecyclerView
+        recyclerView = findViewById(R.id.chatListRecyclerView) as RecyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.setLayoutManager(LinearLayoutManager(this))
 
@@ -35,7 +37,7 @@ class ChatListActivity: AppCompatActivity() {
         chatList.add(
             ChatListItem(
                 1,
-                "Pandelis Zembashis",
+                Contact("1", "Pandelis Zembashis"),
                 "2 hours ago",
                 "19:30",
                 600)

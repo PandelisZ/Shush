@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:id="@+id/chatListItemParentLayout">
 
     <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -21,7 +22,7 @@
                     android:padding="4dp" />
 
             <TextView
-                    android:id="@+id/textViewTitle"
+                    android:id="@+id/textViewSender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -31,10 +32,10 @@
                     android:textColor="#000000" />
 
             <TextView
-                    android:id="@+id/textViewShortDesc"
+                    android:id="@+id/textViewLastMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_below="@id/textViewTitle"
+                    android:layout_below="@id/textViewSender"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_toRightOf="@id/imageView"
@@ -42,10 +43,10 @@
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
             <TextView
-                    android:id="@+id/textViewRating"
+                    android:id="@+id/textViewRecievedTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/textViewShortDesc"
+                    android:layout_below="@id/textViewLastMessage"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_toRightOf="@id/imageView"
