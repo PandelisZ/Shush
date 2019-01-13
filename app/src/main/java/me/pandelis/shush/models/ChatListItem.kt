@@ -1,9 +1,9 @@
 package me.pandelis.shush.models
 
-class Product(
+class ChatListItem(
     val id: Int,
     val sender: String,
     val lastMessage: String,
-    val lastMessageRecievedTime: String,
+    val lastMessageReceivedTime: String,
     val image: Int
 )
