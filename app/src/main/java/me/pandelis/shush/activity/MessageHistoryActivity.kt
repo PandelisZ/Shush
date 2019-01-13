@@ -6,19 +6,28 @@ import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
-import com.stfalcon.chatkit.commons.ImageLoader
 import me.pandelis.shush.R
 import com.stfalcon.chatkit.messages.MessagesListAdapter
 import me.pandelis.shush.models.Message
 import java.util.*
+import com.stfalcon.chatkit.messages.MessageInput
+import com.stfalcon.chatkit.messages.MessagesList
+
+import me.pandelis.shush.models.Contact
+import kotlin.collections.ArrayList
 
 
-abstract class MessageHistoryActivity : AppCompatActivity(), MessagesListAdapter.SelectionListener,
-    MessagesListAdapter.OnLoadMoreListener {
+abstract class MessageHistoryActivity(
+    private var messagesList: MessagesList,
+    private var senderId: String = "0"
+) : AppCompatActivity(), MessagesListAdapter.SelectionListener,
+    MessagesListAdapter.OnLoadMoreListener, MessageInput.InputListener,
+    MessageInput.AttachmentsListener,
+    MessageInput.TypingListener  {
 
     protected val tag = "MessageHistoryActivity"
     private val imageLoader = null
-    protected val senderId = "0"
+
     private var messagesAdapter: MessagesListAdapter<Message>? = null
 
     private var menu: Menu? = null
@@ -100,6 +109,16 @@ abstract class MessageHistoryActivity : AppCompatActivity(), MessagesListAdapter
         super.onCreate(savedInstanceState, persistentState)
         setContentView(R.layout.activity_message_history)
         Log.d(tag, "onCreate: started")
+
+        getIncomingIntent()
+
+        messagesList = findViewById<MessagesList>(R.id.messagesList)
+        initAdapter()
+
+        val input = findViewById<MessageInput>(R.id.input)
+        input.setInputListener(this)
+        input.setTypingListener(this)
+        input.setAttachmentsListener(this)
     }
 
     private fun getIncomingIntent() {
@@ -107,10 +126,36 @@ abstract class MessageHistoryActivity : AppCompatActivity(), MessagesListAdapter
             Log.d(tag, "getIncomingIntent: Found intent extras")
         }
 
-        val senderId = intent.getStringExtra("senderId")
+        senderId = intent.getStringExtra("senderId")
 
 
     }
+
+    private fun initAdapter() {
+        val newAdapter = MessagesListAdapter<Message>(senderId, imageLoader)
+        newAdapter.enableSelectionMode(this)
+        newAdapter.setLoadMoreListener(this)
+//        newAdapter.registerViewClickListener(R.id.messageUserAvatar
+//        ) { view, message -> Log.d(tag, "onMessageviewClick") }
+//
+        messagesAdapter = newAdapter
+        this.messagesList.setAdapter(messagesAdapter)
+    }
+
+    protected fun loadMessages() {
+        val messages = ArrayList<Message>()
+
+        messages.add(
+            Message(
+                "0",
+                Contact("0", "Pandelis Zembashis", null),
+                Date()
+            )
+        )
+        lastLoadedDate = Date()
+        messagesAdapter?.addToEnd(messages, false)
+    }
+
 
 //    private fun retrieveMessagesFromSender(senderId: String) {
 //        Log.d(tag, "Retrieving messages for sender: $senderId")
