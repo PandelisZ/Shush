@@ -6,6 +6,7 @@ import java.util.*
 
 class Message(
     private val _id: String,
+    private val text: String,
     private val sender: Contact,
     private val sentAt: Date
 ) : IMessage {

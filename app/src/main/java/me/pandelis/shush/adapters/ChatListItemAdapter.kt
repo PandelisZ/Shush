@@ -7,15 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import me.pandelis.shush.R
 import me.pandelis.shush.activity.MessageHistoryActivity
 import me.pandelis.shush.models.ChatListItem
-import com.stfalcon.chatkit.commons.ImageLoader
-
-
 
 class ChatListItemAdapter//getting the context and product list with constructor
     (//this context we will use to inflate the layout
