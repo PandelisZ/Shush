@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 
-import kotlinx.android.synthetic.main.activity_message_list.*
+import kotlinx.android.synthetic.main.activity_chat_list.*
 import me.pandelis.shush.adapters.ChatListItemAdapter
 import me.pandelis.shush.models.ChatListItem
 
@@ -16,7 +16,7 @@ class ChatListActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_message_list)
+        setContentView(R.layout.activity_chat_list)
         setSupportActionBar(toolbar)
 
         var chatList: ArrayList<ChatListItem>

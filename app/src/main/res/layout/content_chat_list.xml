@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:showIn="@layout/activity_message_list"
+        tools:showIn="@layout/activity_chat_list"
         tools:context=".ChatListActivity">
 
     <android.support.v7.widget.RecyclerView

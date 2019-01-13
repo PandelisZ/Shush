@@ -18,7 +18,7 @@ class ChatListItemAdapter//getting the context and product list with constructor
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageListItemHolder {
         //inflating and returning our view holder
         val inflater = LayoutInflater.from(mCtx)
-        val view = inflater.inflate(R.layout.content_message_list, null)
+        val view = inflater.inflate(R.layout.chat_list_item, null)
         return MessageListItemHolder(view)
     }
 
