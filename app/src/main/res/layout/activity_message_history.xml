@@ -3,12 +3,23 @@
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
                                              android:layout_width="match_parent"
                                              android:layout_height="match_parent"
-                                            >
+>
 
     <com.stfalcon.chatkit.messages.MessagesList
             android:id="@+id/messagesList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:dateHeaderFormat="dd MMMM yyyy"
+            app:incomingDefaultBubbleColor="@color/lightYellow"
+            app:incomingDefaultBubblePressedColor="@color/colorAccent"
+            app:incomingDefaultBubbleSelectedColor="@color/gray"
+            app:incomingTextColor="@color/black"
+            app:incomingTextLinkColor="@color/colorAccent"
+            app:incomingTextSize="18sp"
+            app:outcomingDefaultBubbleColor="@color/colorLightGrey"
+            app:outcomingTextColor="@color/black"
+            app:outcomingTextSize="18sp"
+            app:textAutoLink="all"
             android:layout_above="@+id/input"/>
 
     <View
@@ -23,6 +34,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            app:attachmentButtonDefaultIconColor="@color/colorPrimaryDark"
+            app:attachmentButtonDefaultIconPressedColor="@color/colorPrimaryDark"
+            app:inputButtonDefaultBgColor="@color/colorPrimaryDark"
+            app:inputButtonDefaultBgPressedColor="@color/colorPrimaryDark"
             app:inputHint="@string/hint_enter_a_message"
             app:showAttachmentButton="true"/>
 
