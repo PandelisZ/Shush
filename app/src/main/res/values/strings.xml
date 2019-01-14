@@ -2,4 +2,10 @@
     <string name="app_name">shush</string>
     <string name="action_settings">Settings</string>
     <string name="hint_enter_a_message">Type to send </string>
+    <string name="welcome_to_shush">Welcome to shush</string>
+    <string name="the_fully_end_to_end_encrypted_messaging_app_that_doesn_t_fingerprint_you_or_store_any_identifying_information_about_you">
+        The fully end to end encrypted messaging app that doesn’t fingerprint you or store any identifying information
+        about you.
+    </string>
+    <string name="get_started">Get Started</string>
 </resources>
