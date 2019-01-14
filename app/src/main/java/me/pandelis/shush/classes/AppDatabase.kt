@@ -10,7 +10,7 @@ import me.pandelis.shush.models.Profile
 @Database(
     entities = arrayOf(
         Profile::class
-    ), version = 2, exportSchema = false )
+    ), version = 3, exportSchema = false )
 abstract class AppDatabase : RoomDatabase() {
 
 
@@ -23,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
             if (INSTANCE == null) {
                 synchronized(AppDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
-                        AppDatabase::class.java, "shush3.db")
+                        AppDatabase::class.java, "shush.db")
                         .allowMainThreadQueries()
                         .build()
                 }

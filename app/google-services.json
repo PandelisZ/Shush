@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "861436507316",
+    "firebase_url": "https://shush-notifications.firebaseio.com",
+    "project_id": "shush-notifications",
+    "storage_bucket": "shush-notifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861436507316:android:7ce7332c67d411e1",
+        "android_client_info": {
+          "package_name": "me.pandelis.shush"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "861436507316-h3idq0db31edn1n66q24kjhof4tbpho9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwt6mYR9wEpIBKw-WwNBftCn8_-BRtlno"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

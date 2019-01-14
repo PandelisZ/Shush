@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import me.pandelis.shush.R
 import me.pandelis.shush.classes.AppDatabase
+import me.pandelis.shush.classes.ShushAPI
+import me.pandelis.shush.models.GetMessage
 import me.pandelis.shush.models.Profile
 import me.pandelis.shush.utils.DbWorkerThread
 
@@ -24,6 +26,8 @@ class MainActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_loading)
+
+        this.deleteDatabase("shush.db")
 
         mDbWorkerThread = DbWorkerThread("dbWorkerThread")
         mDbWorkerThread.start()

@@ -16,10 +16,18 @@ import java.nio.charset.StandardCharsets
 import java.security.interfaces.RSAPrivateKey
 import android.R.attr.publicKey
 import android.app.Person
+import android.util.Log
 import android.widget.EditText
+import me.pandelis.shush.classes.ShushAPI
 import me.pandelis.shush.models.Profile
+import me.pandelis.shush.models.Response
+import me.pandelis.shush.models.UpdateProfile
+import me.pandelis.shush.services.ShushService
 import me.pandelis.shush.utils.savePrivateKey
 import me.pandelis.shush.utils.savePublicKey
+import retrofit2.Call
+import retrofit2.Callback
+import java.io.IOException
 import java.security.*
 import java.security.interfaces.RSAPublicKey
 
@@ -27,6 +35,7 @@ import java.security.interfaces.RSAPublicKey
 class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
 
     private var DB: AppDatabase? = null
+    private var API: ShushService? = null
     private lateinit var mDbWorkerThread: DbWorkerThread
     private val mUiHandler = Handler()
     private lateinit var actionButton: Button
@@ -46,6 +55,7 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
         mDbWorkerThread.start()
 
         DB = AppDatabase.getInstance(this)
+        API = ShushAPI.getInstance()
 
         val mGetStartedButton = findViewById<Button>(R.id.getStartedButton)
         mGetStartedButton.setOnClickListener(this)
@@ -93,7 +103,10 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun insertProfileInformation(profile: Profile) {
-        val task = Runnable { DB?.profileDao()?.createProfile(profile) }
+        val task = Runnable {
+            DB?.profileDao()?.createProfile(profile)
+            API?.register(UpdateProfile(profile.name, savePublicKey(publicKey)))?.execute()
+        }
         mDbWorkerThread.postTask(task)
     }
 
