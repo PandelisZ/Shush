@@ -12,11 +12,12 @@ abstract class ShushAPI {
         fun getInstance(): ShushService? {
             if (INSTANCE == null) {
                 synchronized(Retrofit::class) {
-                    INSTANCE = Retrofit.Builder()
+                    val retrofit = Retrofit.Builder()
                         .baseUrl("https://shush-server.herokuapp.com")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build()
-                        .create(ShushService::class.java)
+
+                        INSTANCE = retrofit.create(ShushService::class.java)
                 }
             }
             return INSTANCE

@@ -105,7 +105,11 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
     private fun insertProfileInformation(profile: Profile) {
         val task = Runnable {
             DB?.profileDao()?.createProfile(profile)
-            API?.register(UpdateProfile(profile.name, savePublicKey(publicKey)))?.execute()
+            val response = API?.register(UpdateProfile(profile.name, savePublicKey(publicKey)))?.execute()
+            Log.d("Lol", "running")
+            if (response!!.isSuccessful) {
+                Log.d("Lol", response?.body()?.status)
+            }
         }
         mDbWorkerThread.postTask(task)
     }
