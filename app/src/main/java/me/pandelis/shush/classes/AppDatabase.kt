@@ -23,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
             if (INSTANCE == null) {
                 synchronized(AppDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
-                        AppDatabase::class.java, "shush2.db")
+                        AppDatabase::class.java, "shush3.db")
                         .allowMainThreadQueries()
                         .build()
                 }

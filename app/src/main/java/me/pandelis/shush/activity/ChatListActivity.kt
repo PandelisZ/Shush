@@ -75,7 +75,7 @@ class ChatListActivity: AppCompatActivity() {
 
     companion object {
         fun open(context: Context) {
-            context.startActivity(Intent(context, UserOnboardingActivity::class.java))
+            context.startActivity(Intent(context, ChatListActivity::class.java))
         }
     }
 }

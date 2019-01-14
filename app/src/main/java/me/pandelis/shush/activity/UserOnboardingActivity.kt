@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets
 import java.security.interfaces.RSAPrivateKey
 import android.R.attr.publicKey
 import android.app.Person
+import android.widget.EditText
 import me.pandelis.shush.models.Profile
 import me.pandelis.shush.utils.savePrivateKey
 import me.pandelis.shush.utils.savePublicKey
@@ -34,8 +35,8 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var keyTextArea: TextView
     private lateinit var privateKey: PrivateKey
     private lateinit var publicKey: PublicKey
-    private lateinit var nameInput: TextView
-    private var onboardingStep = 1;
+    private lateinit var nameInput: EditText
+    private var onboardingStep = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +54,10 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    override fun onBackPressed() {
+        // Disable
+    }
+
     fun generatePrivateKeyActivity() {
         setContentView(R.layout.activity_user_onboarding_generating)
 
@@ -60,7 +65,7 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
         titleText = findViewById(R.id.oboardingTitleText)
         descriptorText = findViewById(R.id.onboardingDescriptorText)
         keyTextArea = findViewById(R.id.onboardingKeyTextArea)
-        nameInput = findViewById<TextView>(R.id.onboardingNameInput)
+        nameInput = findViewById(R.id.onboardingNameInput)
 
 
         titleText.text = resources.getText(R.string.generating_key_title)
@@ -127,19 +132,25 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun moveToNextView() {
-        if(onboardingStep == 1) {
-            onboardingStep ++
-            generatePublicKeyActivity()
-        }
-        if(onboardingStep == 2) {
-            onboardingStep ++
-            askForNameActivity()
-        }
-        if(onboardingStep == 3) {
-            if(nameInput.text.toString() != "" && nameInput.text != null) {
-                finishOnboarding()
+        when (onboardingStep) {
+            1 -> {
+                onboardingStep ++
+                generatePublicKeyActivity()
+                return
             }
 
+            2 -> {
+                onboardingStep ++
+                askForNameActivity()
+                return
+            }
+
+            3 -> {
+                if(nameInput.text.toString() != "" && nameInput.text != null) {
+                    finishOnboarding()
+                    return
+                }
+            }
         }
     }
 
@@ -149,7 +160,7 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
                 generatePrivateKeyActivity()
             }
 
-            R.id.getStartedButton -> {
+            R.id.onboardingActionButton -> {
                 moveToNextView()
             }
         }

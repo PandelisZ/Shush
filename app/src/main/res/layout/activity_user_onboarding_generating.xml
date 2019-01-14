@@ -34,14 +34,16 @@
             android:background="@color/white" android:height="200dp"
             android:layout_alignParentBottom="false"
             android:layout_marginTop="150dp" />
-    <TextView
+    <EditText
             android:id="@+id/onboardingNameInput"
             android:layout_width="match_parent"
             android:background="@color/white"
             android:layout_marginTop="150dp"
             android:visibility="invisible"
-              android:layout_centerHorizontal="true" android:textColor="@color/dark_grey_two"
-              android:layout_height="30dp"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:layout_centerHorizontal="true" android:textColor="@color/dark_grey_two"
+            android:layout_height="50dp"
     />
     <Button
             android:text="@string/get_started"
