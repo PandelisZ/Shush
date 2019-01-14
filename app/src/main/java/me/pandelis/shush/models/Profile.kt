@@ -16,7 +16,7 @@ data class Profile(
     val image: ByteArray?
 ) {
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    var id: Int = 0
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
