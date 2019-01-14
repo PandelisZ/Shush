@@ -5,6 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:background="@color/colorPrimary" android:padding="30dp">
 
@@ -20,20 +21,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/onboardingDescriptorText"
             android:textColor="@color/white" android:textSize="18sp"
-            android:layout_alignParentTop="false" android:layout_marginTop="40dp"/>
+            android:layout_alignParentTop="true" android:layout_marginTop="40dp"/>
+
+    <TextView
+            android:id="@+id/onboardingKeyTextArea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:focusable="true"
+            android:longClickable="true"
+            android:layout_centerHorizontal="true" android:textColor="@color/dark_grey_two"
+            android:background="@color/white" android:height="200dp"
+            android:layout_alignParentBottom="false"
+            android:layout_marginTop="150dp" />
+    <TextView
+            android:id="@+id/onboardingNameInput"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:layout_marginTop="150dp"
+            android:visibility="invisible"
+              android:layout_centerHorizontal="true" android:textColor="@color/dark_grey_two"
+              android:layout_height="30dp"
+    />
     <Button
             android:text="@string/get_started"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/onboardingActionButton"
             android:layout_marginBottom="20dp"
             android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"/>
-    <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/onboardingKeyTextArea"
-            android:layout_centerHorizontal="true" android:textColor="@color/dark_grey_two"
-            android:background="@color/white" android:height="200dp" android:layout_alignParentBottom="true"
-            android:layout_marginBottom="97dp" />
+
 </RelativeLayout>

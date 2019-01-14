@@ -22,27 +22,30 @@ class MainActivity() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_onboarding)
+
+        setContentView(R.layout.activity_loading)
 
         mDbWorkerThread = DbWorkerThread("dbWorkerThread")
         mDbWorkerThread.start()
 
         DB = AppDatabase.getInstance(this)
 
-
-        val profile = DB?.profileDao()?.getProfile()
-
-        if (profile == null) {
-            Log.d("MainActivity", "Profile does not exist")
-        }
-
+        fetchProfileFromDb()
     }
 
-//    private fun fetchProfileFromDb() {
-//        val task = Runnable {
-//            val profile = DB?.profileDao()?.getProfile()
-//            profileFetchListener.onResult(profile)
-//        }
-//        mDbWorkerThread.postTask(task)
-//    }
+    private fun fetchProfileFromDb() {
+        val task = Runnable {
+            val profile = DB?.profileDao()?.getProfile()
+
+            mUiHandler.post {
+                if (profile == null) {
+                    UserOnboardingActivity.open(this)
+                } else {
+                    ChatListActivity.open(this)
+                }
+            }
+
+        }
+        mDbWorkerThread.postTask(task)
+    }
 }

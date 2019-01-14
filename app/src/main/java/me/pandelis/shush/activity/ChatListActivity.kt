@@ -1,5 +1,7 @@
 package me.pandelis.shush.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
@@ -68,6 +70,12 @@ class ChatListActivity: AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    companion object {
+        fun open(context: Context) {
+            context.startActivity(Intent(context, UserOnboardingActivity::class.java))
         }
     }
 }

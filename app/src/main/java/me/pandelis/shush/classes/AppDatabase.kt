@@ -3,14 +3,17 @@ package me.pandelis.shush.classes
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.migration.Migration
 import android.content.Context
 import me.pandelis.shush.models.Profile
 
 @Database(
     entities = arrayOf(
         Profile::class
-    ), version = 1 )
+    ), version = 2, exportSchema = false )
 abstract class AppDatabase : RoomDatabase() {
+
+
     abstract fun profileDao(): ProfileDao
 
     companion object {
@@ -20,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
             if (INSTANCE == null) {
                 synchronized(AppDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
-                        AppDatabase::class.java, "shush.db")
+                        AppDatabase::class.java, "shush2.db")
                         .allowMainThreadQueries()
                         .build()
                 }
