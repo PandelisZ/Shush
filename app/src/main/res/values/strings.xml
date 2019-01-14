@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">shush</string>
     <string name="action_settings">Settings</string>
-    <string name="hint_enter_a_message">Type to send </string>
+    <string name="hint_enter_a_message">Type to send</string>
     <string name="welcome_to_shush">Welcome to shush</string>
     <string name="the_fully_end_to_end_encrypted_messaging_app_that_doesn_t_fingerprint_you_or_store_any_identifying_information_about_you">
         The fully end to end encrypted messaging app that doesn’t fingerprint you or store any identifying information
@@ -9,9 +9,14 @@
     </string>
     <string name="get_started">Get Started</string>
     <string name="generating_key_title">Generating unique key</string>
-    <string name="generating_key_descriptor">We’re generating a unique key on your device that will be used to encrypt all your outgoing messages and provide other users with a way to message you.</string>
+    <string name="generating_key_descriptor">We’re generating a unique key on your device that will be used to encrypt
+        all your outgoing messages and provide other users with a way to message you.
+    </string>
     <string name="this_is_your_private_key_title">This is your private key</string>
-    <string name="this_is_your_private_key_descriptor">Make a copy of this key and keep it safe! We recommend writing it down on paper and keeping it in a locked safe. If you ever loose this you will loose access to all your messages.</string>
+    <string name="this_is_your_private_key_descriptor">Make a copy of this key and keep it safe! We recommend writing it
+        down on paper and keeping it in a locked safe. If you ever loose this you will loose access to all your
+        messages.
+    </string>
     <string name="this_is_your_public_key_title">This is your public key</string>
     <string name="this_is_your_public_key_descriptor">
         This is the key you should share with other’s if you want them to be able to message you.
@@ -22,4 +27,9 @@
     <string name="enter_your_name_desciptor">This will be the name that appears for other users</string>
     <string name="button_continue">Continue</string>
     <string name="button_finish">Finish</string>
+    <string name="start_a_new_conversation">Start a new conversation</string>
+    <string name="in_order_to_start_a_new_conversation_you_will_need_the_user_s_public_key_you_are_trying_to_communicate_with_paste_the_key_bellow_to_add_them">
+        In order to start a new conversation you will need the user\'s public key you are trying to communicate with.
+        Paste the key bellow to add them.
+    </string>
 </resources>

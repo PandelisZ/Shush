@@ -11,44 +11,35 @@
 
 
     <TextView
-            android:text="@string/welcome_to_shush"
+            android:text="@string/start_a_new_conversation"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/oboardingTitleText"
+            android:layout_height="wrap_content" android:id="@+id/add_contact_title"
             android:layout_centerHorizontal="false" android:textColor="@color/white"
             android:textSize="24sp" android:textStyle="bold"/>
     <TextView
-            android:text="@string/the_fully_end_to_end_encrypted_messaging_app_that_doesn_t_fingerprint_you_or_store_any_identifying_information_about_you"
+            android:text="@string/in_order_to_start_a_new_conversation_you_will_need_the_user_s_public_key_you_are_trying_to_communicate_with_paste_the_key_bellow_to_add_them"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/onboardingDescriptorText"
+            android:layout_height="wrap_content" android:id="@+id/add_contact_descriptor"
             android:textColor="@color/white" android:textSize="18sp"
             android:layout_alignParentTop="true" android:layout_marginTop="40dp"/>
 
-    <TextView
-            android:id="@+id/onboardingKeyTextArea"
+    <EditText
+            android:id="@+id/add_contact_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="none"
             android:textIsSelectable="true"
             android:focusable="true"
             android:longClickable="true"
             android:layout_centerHorizontal="true" android:textColor="@color/dark_grey_two"
             android:background="@color/white" android:height="200dp"
             android:layout_alignParentBottom="false"
-            android:layout_marginTop="150dp" />
-    <EditText
-            android:id="@+id/onboardingNameInput"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:layout_marginTop="150dp"
-            android:visibility="invisible"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:layout_centerHorizontal="true" android:textColor="@color/dark_grey_two"
-            android:layout_height="50dp"
-    />
+            android:layout_marginTop="150dp" android:importantForAutofill="no"/>
+
     <Button
-            android:text="@string/get_started"
+            android:text="@string/button_continue"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/onboardingActionButton"
+            android:layout_height="wrap_content" android:id="@+id/add_contact_add_button"
             android:layout_marginBottom="20dp"
             android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
             android:background="@color/white" android:padding="20dp"
