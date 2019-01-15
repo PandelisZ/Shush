@@ -13,6 +13,12 @@ interface ContactsDao {
     @Query("SELECT * FROM contacts")
     fun getContacts(): List<DbContact>
 
+    @Query("SELECT * FROM contacts WHERE id=:id")
+    fun getContact(id: String): DbContact
+
+    @Query("SELECT * FROM contacts WHERE id=:id")
+    fun getContact(id: Int): DbContact
+
     @Insert
     fun add(vararg contacts: DbContact)
 

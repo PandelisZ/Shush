@@ -45,7 +45,7 @@ class ChatListItemAdapter//getting the context list with constructor
             Log.d(tag, "onClick: clicked on: " + message.sender.name)
 
             val intent = Intent(mCtx, MessageHistoryActivity::class.java)
-            intent.putExtra("senderId", message.sender.id)
+            intent.putExtra("contactId", message.sender.id)
 
             mCtx.startActivity(intent)
         }

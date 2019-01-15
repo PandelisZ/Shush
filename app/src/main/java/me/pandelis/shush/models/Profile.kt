@@ -8,8 +8,7 @@ import java.util.*
 @Entity
 data class Profile(
     val name: String,
-    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    val publicKey: ByteArray,
+    val publicKey: String,
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     val privateKey: ByteArray,
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
@@ -25,8 +24,6 @@ data class Profile(
         other as Profile
 
         if (id != other.id) return false
-        if (!Arrays.equals(publicKey, other.publicKey)) return false
-        if (!Arrays.equals(privateKey, other.privateKey)) return false
         if (!Arrays.equals(image, other.image)) return false
         if (name != other.name) return false
 
@@ -35,8 +32,6 @@ data class Profile(
 
     override fun hashCode(): Int {
         var result = id
-        result = 31 * result + Arrays.hashCode(publicKey)
-        result = 31 * result + Arrays.hashCode(privateKey)
         result = 31 * result + Arrays.hashCode(image)
         result = 31 * result + name.hashCode()
         return result

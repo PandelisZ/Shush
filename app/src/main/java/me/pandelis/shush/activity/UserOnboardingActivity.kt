@@ -133,7 +133,7 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
 
     fun finishOnboarding() {
         val profile = Profile(
-            publicKey = publicKey.encoded,
+            publicKey = savePublicKey(publicKey),
             privateKey = privateKey.encoded,
             name = nameInput.text.toString(),
             image = null

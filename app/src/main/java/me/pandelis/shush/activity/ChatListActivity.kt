@@ -115,8 +115,8 @@ class ChatListActivity: AppCompatActivity() {
             R.id.action_settings -> true
             R.id.delete_database -> {
                 this.deleteDatabase("shush.db")
-                MainActivity.open(this)
-                return true
+                finish()
+                true
             }
             else -> super.onOptionsItemSelected(item)
         }

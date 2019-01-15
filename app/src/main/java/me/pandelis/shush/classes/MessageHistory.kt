@@ -19,6 +19,7 @@ abstract class MessageHistory : AppCompatActivity(), MessagesListAdapter.Selecti
     MessagesListAdapter.OnLoadMoreListener {
 
     protected val senderId = "0"
+    protected val mySenderId = "1"
     protected var imageLoader: ImageLoader? = null
     protected var messagesAdapter: MessagesListAdapter<Message>? = null
 
@@ -101,7 +102,7 @@ abstract class MessageHistory : AppCompatActivity(), MessagesListAdapter.Selecti
 //        menu!!.findItem(R.id.action_copy).isVisible = count > 0
     }
 
-    protected fun loadMessages() {
+    private fun loadMessages() {
 
         var messages = ArrayList<Message>()
 
