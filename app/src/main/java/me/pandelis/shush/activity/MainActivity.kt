@@ -23,7 +23,7 @@ import me.pandelis.shush.utils.DbWorkerThread
 class MainActivity() : AppCompatActivity() {
 
     private var DB: AppDatabase? = null
-    private lateinit var mDbWorkerThread: DbWorkerThread
+    private var mDbWorkerThread = DbWorkerThread("dbWorkerThread")
     private val mUiHandler = Handler()
 
 
@@ -33,7 +33,6 @@ class MainActivity() : AppCompatActivity() {
 
 //        this.deleteDatabase("shush.db")
 
-        mDbWorkerThread = DbWorkerThread("dbWorkerThread")
         mDbWorkerThread.start()
 
         DB = AppDatabase.getInstance(this)

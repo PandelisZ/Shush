@@ -69,7 +69,7 @@ class AddContact : AppCompatActivity(), View.OnClickListener {
 
         if(publicKey != null && publicKey != "") {
 
-            API?.user(UpdateProfile(name = null, publicKey = publicKey))?.enqueue(object: Callback<UserProfileResponse> {
+            API?.user(UpdateProfile(name = null, publicKey = publicKey, firebaseId = null))?.enqueue(object: Callback<UserProfileResponse> {
                 override fun onFailure(call: Call<UserProfileResponse>?, t: Throwable?) {
                     handleProfileRetrieval(false, null)
                 }

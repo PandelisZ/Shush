@@ -22,6 +22,7 @@ import me.pandelis.shush.classes.ShushAPI
 import me.pandelis.shush.models.Profile
 import me.pandelis.shush.models.Response
 import me.pandelis.shush.models.UpdateProfile
+import me.pandelis.shush.services.MyFirebaseMessagingService
 import me.pandelis.shush.services.ShushService
 import me.pandelis.shush.utils.savePrivateKey
 import me.pandelis.shush.utils.savePublicKey
@@ -103,9 +104,10 @@ class UserOnboardingActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun insertProfileInformation(profile: Profile) {
+        val firebase = MyFirebaseMessagingService()
         val task = Runnable {
             DB?.profileDao()?.createProfile(profile)
-            API?.register(UpdateProfile(profile.name, savePublicKey(publicKey)))?.execute()
+            API?.register(UpdateProfile(profile.name, savePublicKey(publicKey), firebase.getToken(this)))?.execute()
         }
         mDbWorkerThread.postTask(task)
     }
