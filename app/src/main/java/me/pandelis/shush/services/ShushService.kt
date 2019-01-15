@@ -1,6 +1,5 @@
 package me.pandelis.shush.services
 
-import io.reactivex.Observable
 import me.pandelis.shush.models.*
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -13,13 +12,16 @@ import retrofit2.http.POST
 interface ShushService {
 
     @GET("messages")
-    fun getMessages(@Body user: GetMessage): Call<List<MessageResponse>>
+    fun messages(@Body user: GetMessage): Call<List<MessageResponse>>
 
     @POST("messages/send")
     fun send(@Body message: SendMessage): Call<Response>
 
     @POST("user/register")
     fun register(@Body profile: UpdateProfile): Call<Response>
+
+    @POST("user")
+    fun user(@Body profile: UpdateProfile): Call<UpdateProfile>
 
 
     companion object {

@@ -5,16 +5,20 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.migration.Migration
 import android.content.Context
+import me.pandelis.shush.models.Contact
+import me.pandelis.shush.models.DbContact
 import me.pandelis.shush.models.Profile
 
 @Database(
     entities = arrayOf(
-        Profile::class
+        Profile::class,
+        DbContact::class
     ), version = 3, exportSchema = false )
 abstract class AppDatabase : RoomDatabase() {
 
 
     abstract fun profileDao(): ProfileDao
+    abstract fun contactDao(): ContactsDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

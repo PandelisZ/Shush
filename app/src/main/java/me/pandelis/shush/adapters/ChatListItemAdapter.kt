@@ -13,9 +13,9 @@ import me.pandelis.shush.R
 import me.pandelis.shush.activity.MessageHistoryActivity
 import me.pandelis.shush.models.ChatListItem
 
-class ChatListItemAdapter//getting the context and product list with constructor
+class ChatListItemAdapter//getting the context list with constructor
     (//this context we will use to inflate the layout
-    private val mCtx: Context, //we are storing all the products in a list
+    private val mCtx: Context, //we are storing all the users in a list
     private val chatList: List<ChatListItem>
 ) : RecyclerView.Adapter<ChatListItemAdapter.MessageListItemHolder>() {
 
@@ -29,7 +29,7 @@ class ChatListItemAdapter//getting the context and product list with constructor
     }
 
     override fun onBindViewHolder(holder: MessageListItemHolder, position: Int) {
-        //getting the product of the specified position
+        //getting the user of the specified position
         val message = chatList[position]
 
         //binding the data with the viewholder views
@@ -37,7 +37,7 @@ class ChatListItemAdapter//getting the context and product list with constructor
         holder.textViewLastMessage.text = message.lastMessage
         holder.textViewLastReceivedTime.text = message.lastMessageReceivedTime
 
-//        holder.imageView.setImageDrawable(mCtx.resources.getDrawable(product.image))
+//        holder.imageView.setImageDrawable(mCtx.resources.getDrawable(message.image))
 
 
         // Click Listener

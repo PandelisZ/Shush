@@ -15,6 +15,10 @@ import me.pandelis.shush.R
 import me.pandelis.shush.adapters.ChatListItemAdapter
 import me.pandelis.shush.models.ChatListItem
 import me.pandelis.shush.models.Contact
+import android.widget.Toast
+import android.R.attr.data
+
+
 
 class ChatListActivity: AppCompatActivity() {
 
@@ -31,6 +35,18 @@ class ChatListActivity: AppCompatActivity() {
         recyclerView = findViewById(R.id.chatListRecyclerView) as RecyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.setLayoutManager(LinearLayoutManager(this))
+
+
+
+        if (intent.extras != null) {
+            val successFullUserAdd = intent.extras.getBoolean("CONTACT_ADDED_SUCCESSFULLY")
+            if (!successFullUserAdd) {
+                Toast.makeText(
+                    applicationContext, "Could not find user with that public key",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
         //initializing the MesasgeList
         chatList = ArrayList<ChatListItem>()
