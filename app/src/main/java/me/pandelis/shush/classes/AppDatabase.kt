@@ -3,6 +3,7 @@ package me.pandelis.shush.classes
 import android.arch.persistence.room.*
 import android.content.Context
 import me.pandelis.shush.entities.MessageEntity
+import me.pandelis.shush.entities.SentEntity
 import me.pandelis.shush.models.DbContact
 import me.pandelis.shush.models.Profile
 import java.util.Date
@@ -11,7 +12,8 @@ import java.util.Date
     entities = [
         Profile::class,
         DbContact::class,
-        MessageEntity::class
+        MessageEntity::class,
+        SentEntity::class
     ], version = 3, exportSchema = false )
 @TypeConverters(DateTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -20,6 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun profileDao(): ProfileDao
     abstract fun contactDao(): ContactsDao
     abstract fun messageDao(): MessageDao
+    abstract fun sentMessages(): SentDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

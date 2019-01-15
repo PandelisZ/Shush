@@ -12,6 +12,13 @@ import com.google.firebase.messaging.RemoteMessage
 import me.pandelis.shush.R
 import me.pandelis.shush.activity.ChatListActivity
 import me.pandelis.shush.activity.MainActivity
+import me.pandelis.shush.classes.AppDatabase
+import me.pandelis.shush.classes.MyProfile
+import me.pandelis.shush.classes.ShushAPI
+import me.pandelis.shush.entities.MessageEntity
+import me.pandelis.shush.models.DbContact
+import me.pandelis.shush.models.GetMessage
+import me.pandelis.shush.models.UpdateProfile
 import java.util.*
 
 
@@ -29,6 +36,30 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+
+        val DB = AppDatabase.getInstance(this)
+        val API = ShushAPI.getInstance()
+
+        val downloadedMessages = API?.messages(GetMessage(MyProfile.getInstance(DB!!)!!.publicKey))?.execute()
+
+        val messageResonse = downloadedMessages?.body()
+
+        messageResonse?.forEach { m ->
+            var contactId = DB?.contactDao()?.getContactByPublicKey(m.sender)?.id
+            if (contactId == null) {
+                val newContact = API?.user(UpdateProfile(name = null, publicKey = m.sender, firebaseId = null))?.execute()
+                if (newContact!!.isSuccessful) {
+                    val resContact = newContact.body()!!
+                    contactId = DB?.contactDao()?.add(DbContact(resContact.name, m.sender, null))?.toInt()
+                }
+            }
+
+            if (contactId !== null) {
+                DB?.messageDao()?.add(MessageEntity(m.payload, m.createdAt, Date(), contactId!!))
+            }
+            API?.deleteMessage(m.id)?.execute()
+        }
+
 
         val i = Intent(this, ChatListActivity::class.java)
         val notificationId = Random().nextInt(60000)

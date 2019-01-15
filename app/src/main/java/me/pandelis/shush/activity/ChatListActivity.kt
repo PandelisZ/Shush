@@ -64,12 +64,17 @@ class ChatListActivity: AppCompatActivity() {
             }
         }
 
-//        fetchContactsFroDB()
+        fetchContactsFroDB()
         fetchMessagesFromApi()
 
         fab.setOnClickListener { view ->
             AddContact.open(this)
         }
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        fetchContactsFroDB()
     }
 
     fun fetchMessagesFromApi() {

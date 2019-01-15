@@ -16,10 +16,13 @@ import me.pandelis.shush.classes.AppDatabase
 import me.pandelis.shush.classes.MessageHistory
 import me.pandelis.shush.classes.MyProfile
 import me.pandelis.shush.classes.ShushAPI
+import me.pandelis.shush.entities.MessageEntity
+import me.pandelis.shush.entities.SentEntity
 import me.pandelis.shush.models.*
 import me.pandelis.shush.services.ShushService
 import me.pandelis.shush.utils.DbWorkerThread
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, MessageInput.AttachmentsListener,
     MessageInput.TypingListener {
@@ -75,6 +78,7 @@ class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, Mes
             }
 
             if(contactDb != null) {
+                DB?.sentMessages()?.add(SentEntity(message, Date(), Date(), contactDb!!.id))
                 API?.send(SendMessage(MyProfile.getInstance(DB!!)!!.publicKey, contactDb!!.publicKey, message))?.execute()
             }
         }
@@ -99,25 +103,40 @@ class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, Mes
             }
 
             if(contactDb != null) {
-                val messagesResponse = API?.messages(GetMessage(MyProfile.getInstance(DB!!)!!.publicKey))?.execute()
+                val messagesResponse = DB?.messageDao()?.forUser(contactDb!!.id)
+                val sentMessagesResponse = DB?.sentMessages()?.forUser(contactDb!!.id)
 
-                if (messagesResponse!!.isSuccessful) {
-                    val messagesForDisplay = messagesResponse?.body()?.map {m ->
+                    val messagesFromHistory = messagesResponse?.map {m ->
                         Message(
                             m.id.toString(),
-                            m.payload,
+                            m.message,
                             Contact(
                                 contactDb!!.id.toString(),
                                 contactDb!!.name,
                                 ""),
-                            m.createdAt)
-                    }
+                            m.sentAt)
+                    } as ArrayList
+
+                    val sentMessages = sentMessagesResponse?.map { m ->
+                        Message(
+                            m.id.toString(),
+                            m.message,
+                            Contact(
+                               super.senderId,
+                                "",
+                                ""),
+                            m.sentAt)
+                    } as ArrayList
+
+                    val allMessages = messagesFromHistory + sentMessages
+                    val messagesForDisplay = allMessages.sortedWith(compareBy {
+                        it.createdAt
+                    })
 
                     mUiHandler.post {
                         super.messagesAdapter?.addToEnd(messagesForDisplay, true)
                     }
 
-                }
             }
         }
         mDbWorkerThread.postTask(task)
