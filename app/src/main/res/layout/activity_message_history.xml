@@ -17,6 +17,7 @@
             app:incomingTextLinkColor="@color/colorAccent"
             app:incomingTextSize="18sp"
             app:outcomingDefaultBubbleColor="@color/colorLightGrey"
+            app:outcomingTimeTextColor="@color/sentAtGrey"
             app:outcomingTextColor="@color/black"
             app:outcomingTextSize="18sp"
             app:textAutoLink="all"

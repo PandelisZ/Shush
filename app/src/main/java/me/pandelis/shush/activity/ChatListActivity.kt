@@ -13,19 +13,23 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_chat_list.*
 import me.pandelis.shush.R
 import me.pandelis.shush.adapters.ChatListItemAdapter
-import me.pandelis.shush.models.ChatListItem
-import me.pandelis.shush.models.Contact
 import android.widget.Toast
 import android.R.attr.data
 import android.os.Handler
 import me.pandelis.shush.classes.AppDatabase
-import me.pandelis.shush.models.DbContact
+import me.pandelis.shush.classes.MyProfile
+import me.pandelis.shush.classes.ShushAPI
+import me.pandelis.shush.entities.MessageEntity
+import me.pandelis.shush.models.*
+import me.pandelis.shush.services.ShushService
 import me.pandelis.shush.utils.DbWorkerThread
+import java.util.*
 
 
 class ChatListActivity: AppCompatActivity() {
 
     private var DB: AppDatabase? = null
+    private var API: ShushService? = null
     private lateinit var mDbWorkerThread: DbWorkerThread
     private val mUiHandler = Handler()
     private lateinit var contacts: List<DbContact>
@@ -41,6 +45,8 @@ class ChatListActivity: AppCompatActivity() {
         mDbWorkerThread.start()
 
         DB = AppDatabase.getInstance(this)
+        API = ShushAPI.getInstance()
+
 
         recyclerView = findViewById(R.id.chatListRecyclerView)
         recyclerView.setHasFixedSize(true)
@@ -58,11 +64,40 @@ class ChatListActivity: AppCompatActivity() {
             }
         }
 
-        fetchContactsFroDB()
+//        fetchContactsFroDB()
+        fetchMessagesFromApi()
 
         fab.setOnClickListener { view ->
             AddContact.open(this)
         }
+    }
+
+    fun fetchMessagesFromApi() {
+        val task = Runnable {
+            val downloadedMessages = API?.messages(GetMessage(MyProfile.getInstance(DB!!)!!.publicKey))?.execute()
+
+            val messageResonse = downloadedMessages?.body()
+
+            messageResonse?.forEach { m ->
+                var contactId = DB?.contactDao()?.getContactByPublicKey(m.sender)?.id
+                if (contactId == null) {
+                    val newContact = API?.user(UpdateProfile(name = null, publicKey = m.sender, firebaseId = null))?.execute()
+                    if (newContact!!.isSuccessful) {
+                        val resContact = newContact.body()!!
+                        contactId = DB?.contactDao()?.add(DbContact(resContact.name, m.sender, null))?.toInt()
+                    }
+                }
+
+                if (contactId !== null) {
+                    DB?.messageDao()?.add(MessageEntity(m.payload, m.createdAt, Date(), contactId!!))
+                }
+                API?.deleteMessage(m.id)?.execute()
+            }
+
+            fetchContactsFroDB()
+
+        }
+        mDbWorkerThread.postTask(task)
     }
 
     fun fetchContactsFroDB() {

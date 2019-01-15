@@ -19,6 +19,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun profileDao(): ProfileDao
     abstract fun contactDao(): ContactsDao
+    abstract fun messageDao(): MessageDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

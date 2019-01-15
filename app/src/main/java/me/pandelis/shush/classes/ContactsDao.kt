@@ -19,8 +19,11 @@ interface ContactsDao {
     @Query("SELECT * FROM contacts WHERE id=:id")
     fun getContact(id: Int): DbContact
 
+    @Query("SELECT * FROM contacts WHERE publicKey=:key")
+    fun getContactByPublicKey(key: String): DbContact
+
     @Insert
-    fun add(vararg contacts: DbContact)
+    fun add(contact: DbContact): Long
 
     @Query("SELECT * FROM contacts WHERE id=:id")
     fun getMessagesForUser(id: Int): ContactAllMessages
