@@ -11,7 +11,7 @@ import retrofit2.http.POST
 
 interface ShushService {
 
-    @GET("messages")
+    @POST("messages")
     fun messages(@Body user: GetMessage): Call<List<MessageResponse>>
 
     @POST("messages/send")

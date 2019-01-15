@@ -50,18 +50,18 @@ abstract class MessageHistory : AppCompatActivity(), MessagesListAdapter.Selecti
 //                }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-
-        var message = Message("0",
-            "Lol Hello",
-            Contact("1", "Pandelis Zembashis"),
-            Date()
-            )
-
-        messagesAdapter?.addToStart(message, true)
-    }
+//    override fun onStart() {
+//        super.onStart()
+//
+//
+//        var message = Message("0",
+//            "Lol Hello",
+//            Contact("1", "Pandelis Zembashis"),
+//            Date()
+//            )
+//
+//        messagesAdapter?.addToStart(message, true)
+//    }
 
 //    override fun onCreateOptionsMenu(menu: Menu): Boolean {
 //        this.menu = menu
@@ -92,7 +92,7 @@ abstract class MessageHistory : AppCompatActivity(), MessagesListAdapter.Selecti
     override fun onLoadMore(page: Int, totalItemsCount: Int) {
         Log.i("TAG", "onLoadMore: $page $totalItemsCount")
         if (totalItemsCount < TOTAL_MESSAGES_COUNT) {
-            loadMessages()
+            loadOldMessages()
         }
     }
 
@@ -102,7 +102,7 @@ abstract class MessageHistory : AppCompatActivity(), MessagesListAdapter.Selecti
 //        menu!!.findItem(R.id.action_copy).isVisible = count > 0
     }
 
-    private fun loadMessages() {
+    private fun loadOldMessages() {
 
         var messages = ArrayList<Message>()
 

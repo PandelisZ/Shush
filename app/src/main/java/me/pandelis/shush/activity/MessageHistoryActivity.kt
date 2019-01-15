@@ -57,15 +57,14 @@ class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, Mes
     }
 
     override fun onSubmit(input: CharSequence): Boolean {
+        sendMessageToUser(input.toString())
         super.messagesAdapter?.addToStart(
             Message("423", input.toString(), Contact(super.senderId, "", ""), Date()), true
         )
-        sendMessageToUser(input.toString())
         return true
     }
 
-    fun sendMessageToUser(message: String) {
-
+    private fun sendMessageToUser(message: String) {
         val task = Runnable {
             if(contactDb == null) {
                 val contact = DB?.contactDao()?.getContact(contactId)
@@ -76,14 +75,20 @@ class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, Mes
             }
 
             if(contactDb != null) {
-                API?.send(SendMessage(MyProfile.getInstance(DB!!)!!.publicKey, contactDb!!.publicKey, message))
+                API?.send(SendMessage(MyProfile.getInstance(DB!!)!!.publicKey, contactDb!!.publicKey, message))?.execute()
             }
         }
         mDbWorkerThread.postTask(task)
-
     }
 
-    override fun loadMessages() {
+    override fun onLoadMore(page: Int, totalItemsCount: Int) {
+        Log.i("TAG", "onLoadMore: $page $totalItemsCount")
+        if (totalItemsCount < 100) {
+            loadMessages()
+        }
+    }
+
+     fun loadMessages() {
         val task = Runnable {
             if(contactDb == null) {
                 val contact = DB?.contactDao()?.getContact(contactId)
@@ -108,7 +113,10 @@ class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, Mes
                             m.createdAt)
                     }
 
-                    messagesAdapter?.addToEnd(messagesForDisplay, false)
+                    mUiHandler.post {
+                        super.messagesAdapter?.addToEnd(messagesForDisplay, true)
+                    }
+
                 }
             }
         }
@@ -123,8 +131,8 @@ class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, Mes
 
     private fun initAdapter() {
         super.messagesAdapter = MessagesListAdapter(super.senderId, null)
-        super.messagesAdapter?.enableSelectionMode(this)
-        super.messagesAdapter?.setLoadMoreListener(this)
+//        super.messagesAdapter?.enableSelectionMode(this)
+//        super.messagesAdapter?.setLoadMoreListener(this)
 //        super.messagesAdapter.registerViewClickListener(R.id.messageUserAvatar,
 //            MessagesListAdapter.OnMessageViewClickListener<Any> { view, message ->
 //                AppUtils.showToast(
