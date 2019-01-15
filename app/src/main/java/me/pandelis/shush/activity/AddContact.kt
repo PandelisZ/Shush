@@ -15,6 +15,7 @@ import me.pandelis.shush.classes.AppDatabase
 import me.pandelis.shush.classes.ShushAPI
 import me.pandelis.shush.models.DbContact
 import me.pandelis.shush.models.UpdateProfile
+import me.pandelis.shush.models.UserProfileResponse
 import me.pandelis.shush.services.ShushService
 import me.pandelis.shush.utils.DbWorkerThread
 import retrofit2.Call
@@ -68,12 +69,12 @@ class AddContact : AppCompatActivity(), View.OnClickListener {
 
         if(publicKey != null && publicKey != "") {
 
-            API?.user(UpdateProfile(name = null, publicKey = publicKey))?.enqueue(object: Callback<UpdateProfile> {
-                override fun onFailure(call: Call<UpdateProfile>?, t: Throwable?) {
+            API?.user(UpdateProfile(name = null, publicKey = publicKey))?.enqueue(object: Callback<UserProfileResponse> {
+                override fun onFailure(call: Call<UserProfileResponse>?, t: Throwable?) {
                     handleProfileRetrieval(false, null)
                 }
 
-                override fun onResponse(call: Call<UpdateProfile>?, response: Response<UpdateProfile>?) {
+                override fun onResponse(call: Call<UserProfileResponse>?, response: Response<UserProfileResponse>?) {
                     if (response!!.isSuccessful) {
                         handleProfileRetrieval(true, response.body())
                     } else {
@@ -85,17 +86,22 @@ class AddContact : AppCompatActivity(), View.OnClickListener {
 
     }
 
-    fun handleProfileRetrieval(successful: Boolean, profile: UpdateProfile?) {
+    fun handleProfileRetrieval(successful: Boolean, profile: UserProfileResponse?) {
         val i = Intent(this, ChatListActivity::class.java)
-        if (successful && profile != null) {
-            i.putExtra("CONTACT_ADDED_SUCCESSFULLY", true)
+        if (successful) {
 
-            val contact = DbContact(profile.name!!, profile.publicKey, null)
+            if(profile?.name != null && profile?.id != null ) {
+                i.putExtra("CONTACT_ADDED_SUCCESSFULLY", true)
 
-            val task = Runnable {
-                DB?.contactDao()?.add(contact)
+                val contact = DbContact(profile.name, profile.id, null)
+
+                val task = Runnable {
+                    DB?.contactDao()?.add(contact)
+                }
+                mDbWorkerThread.postTask(task)
+            } else {
+                i.putExtra("CONTACT_ADDED_SUCCESSFULLY", false)
             }
-            mDbWorkerThread.postTask(task)
         } else {
             i.putExtra("CONTACT_ADDED_SUCCESSFULLY", false)
         }

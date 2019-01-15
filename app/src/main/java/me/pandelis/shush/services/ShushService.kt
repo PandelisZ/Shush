@@ -21,7 +21,7 @@ interface ShushService {
     fun register(@Body profile: UpdateProfile): Call<Response>
 
     @POST("user")
-    fun user(@Body profile: UpdateProfile): Call<UpdateProfile>
+    fun user(@Body profile: UpdateProfile): Call<UserProfileResponse>
 
 
     companion object {

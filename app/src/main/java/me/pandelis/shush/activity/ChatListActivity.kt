@@ -17,24 +17,34 @@ import me.pandelis.shush.models.ChatListItem
 import me.pandelis.shush.models.Contact
 import android.widget.Toast
 import android.R.attr.data
-
+import android.os.Handler
+import me.pandelis.shush.classes.AppDatabase
+import me.pandelis.shush.models.DbContact
+import me.pandelis.shush.utils.DbWorkerThread
 
 
 class ChatListActivity: AppCompatActivity() {
+
+    private var DB: AppDatabase? = null
+    private lateinit var mDbWorkerThread: DbWorkerThread
+    private val mUiHandler = Handler()
+    private lateinit var contacts: List<DbContact>
+    private var chatList = emptyList<ChatListItem>()
+    lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_list)
         setSupportActionBar(toolbar)
 
-        var chatList: ArrayList<ChatListItem>
-        val recyclerView: RecyclerView
+        mDbWorkerThread = DbWorkerThread("dbWorkerThread")
+        mDbWorkerThread.start()
 
-        chatList = ArrayList()
+        DB = AppDatabase.getInstance(this)
 
-        recyclerView = findViewById(R.id.chatListRecyclerView) as RecyclerView
+        recyclerView = findViewById(R.id.chatListRecyclerView)
         recyclerView.setHasFixedSize(true)
-        recyclerView.setLayoutManager(LinearLayoutManager(this))
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
 
 
@@ -48,28 +58,39 @@ class ChatListActivity: AppCompatActivity() {
             }
         }
 
-        //initializing the MesasgeList
-        chatList = ArrayList<ChatListItem>()
-
-        //adding some items to our list
-        chatList.add(
-            ChatListItem(
-                1,
-                Contact("1", "Pandelis Zembashis"),
-                "2 hours ago",
-                "19:30",
-                600)
-        )
-
-        //creating recyclerview adapter
-        val adapter = ChatListItemAdapter(this, chatList)
-        //setting adapter to recyclerview
-        recyclerView.adapter = adapter
-
+        fetchContactsFroDB()
 
         fab.setOnClickListener { view ->
             AddContact.open(this)
         }
+    }
+
+    fun fetchContactsFroDB() {
+        val task = Runnable {
+            contacts = DB?.contactDao()!!.getContacts()
+
+            mUiHandler.post {
+                if (contacts != null) {
+                    //initializing the MesasgeList
+
+                    chatList = contacts.map { c ->
+                        ChatListItem(
+                            c.id,
+                            Contact(c.id.toString(), c.name),
+                            "2 hours ago",
+                            "19:30",
+                            600)
+                    }
+
+                    //creating recyclerview adapter
+                    val adapter = ChatListItemAdapter(this, chatList)
+                    //setting adapter to recyclerview
+                    recyclerView.adapter = adapter
+                }
+            }
+
+        }
+        mDbWorkerThread.postTask(task)
     }
 
     // Exit app if back is pressed
@@ -92,6 +113,11 @@ class ChatListActivity: AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
+            R.id.delete_database -> {
+                this.deleteDatabase("shush.db")
+                MainActivity.open(this)
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

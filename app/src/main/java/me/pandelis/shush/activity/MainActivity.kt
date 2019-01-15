@@ -1,6 +1,8 @@
 package me.pandelis.shush.activity
 
 import android.arch.persistence.room.Room
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
@@ -17,9 +19,6 @@ import me.pandelis.shush.models.Profile
 import me.pandelis.shush.services.ShushService
 import me.pandelis.shush.utils.DbWorkerThread
 
-interface RunnableListener {
-    fun onResult(result: Profile?)
-}
 
 class MainActivity() : AppCompatActivity() {
 
@@ -57,5 +56,11 @@ class MainActivity() : AppCompatActivity() {
 
         }
         mDbWorkerThread.postTask(task)
+    }
+
+    companion object {
+        fun open(context: Context) {
+            context.startActivity(Intent(context, MainActivity::class.java))
+        }
     }
 }

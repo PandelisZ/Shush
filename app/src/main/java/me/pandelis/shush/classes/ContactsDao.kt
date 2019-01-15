@@ -10,7 +10,7 @@ import me.pandelis.shush.models.Profile
 interface ContactsDao {
 
     @Query("SELECT * FROM contacts")
-    fun getContacts(): DbContact?
+    fun getContacts(): List<DbContact>
 
     @Insert
     fun add(vararg contacts: DbContact)

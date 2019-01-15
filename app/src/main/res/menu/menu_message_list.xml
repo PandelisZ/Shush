@@ -6,4 +6,9 @@
           android:title="@string/action_settings"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+        <item android:id="@+id/delete_database"
+              android:title="Delete Database"
+              android:orderInCategory="200"
+              app:showAsAction="never"/>
+
 </menu>
