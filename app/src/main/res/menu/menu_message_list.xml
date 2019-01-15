@@ -6,9 +6,13 @@
           android:title="@string/action_settings"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+    <item android:id="@+id/view_key"
+          android:title="My Public Key"
+          android:orderInCategory="200"
+          app:showAsAction="never"/>
         <item android:id="@+id/delete_database"
               android:title="Delete Database"
-              android:orderInCategory="200"
+              android:orderInCategory="300"
               app:showAsAction="never"/>
 
 </menu>

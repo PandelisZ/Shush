@@ -1,11 +1,13 @@
 package me.pandelis.shush.services
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.Build
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -21,8 +23,8 @@ import me.pandelis.shush.models.GetMessage
 import me.pandelis.shush.models.UpdateProfile
 import java.util.*
 import android.support.v4.content.LocalBroadcastManager
-
-
+import me.pandelis.shush.activity.MessageHistoryActivity
+import me.pandelis.shush.models.Contact
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -44,7 +46,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         return context.getSharedPreferences("_", Context.MODE_PRIVATE).getString("fb", "empty")
     }
 
+
+
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+        super.onMessageReceived(remoteMessage)
 
         Log.e("NEW MESSAGE", "Recieved a message")
 
@@ -57,6 +62,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         messageResonse?.forEach { m ->
             var contactId = DB?.contactDao()?.getContactByPublicKey(m.sender)?.id
+
             if (contactId == null) {
                 val newContact = API?.user(UpdateProfile(name = null, publicKey = m.sender, firebaseId = null))?.execute()
                 if (newContact!!.isSuccessful) {
@@ -73,23 +79,41 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val newMessageIntent = Intent("NewMessage")
         newMessageIntent.putExtra("sender", remoteMessage?.data?.get("sender"))
-        newMessageIntent.putExtra("payload", remoteMessage?.notification?.body)
+        newMessageIntent.putExtra("payload", remoteMessage?.data?.get("payload"))
         broadcaster?.sendBroadcast(newMessageIntent)
 
-        val i = Intent(this, ChatListActivity::class.java)
+        val i = Intent(this, MessageHistoryActivity::class.java)
+        val contact = DB?.contactDao()?.getContactByPublicKey(remoteMessage?.data?.get("sender")!!)
+        i.putExtra("contactId", contact!!.id.toString())
+        i.putExtra("contactName", contact!!.name)
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val notificationId = Random().nextInt(60000)
 
-        val pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT)
-        val notificationBuilder = Notification.Builder(this, "M_CH_ID")
-            .setContentTitle("New Message")
-            .setContentText(remoteMessage?.notification?.body)
-            .setAutoCancel(true)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setLargeIcon(BitmapFactory.decodeResource(resources,
-                R.mipmap.ic_launcher))
-            .setContentIntent(pendingIntent)
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val name = "Message Notifications"
+                val descriptionText = "Notifications for shush replies"
+                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                val channel = NotificationChannel("chatNotifications", name, importance).apply {
+                    description = descriptionText
+                }
+                // Register the channel with the system
 
-        val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.createNotificationChannel(channel)
+            }
+
+        val pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT)
+        val notificationBuilder = Notification.Builder(this, "chatNotifications")
+            .setContentTitle(contact!!.name)
+            .setContentText(remoteMessage?.data?.get("payload"))
+            .setAutoCancel(true)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setLargeIcon(BitmapFactory.decodeResource(resources,
+                R.drawable.ic_stat_name))
+            .setContentIntent(pendingIntent)
 
         notificationManager.notify(notificationId, notificationBuilder.build())
     }

@@ -15,7 +15,10 @@ import me.pandelis.shush.R
 import me.pandelis.shush.adapters.ChatListItemAdapter
 import android.widget.Toast
 import android.R.attr.data
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
 import android.os.Handler
+import android.support.v4.content.LocalBroadcastManager
 import me.pandelis.shush.classes.AppDatabase
 import me.pandelis.shush.classes.MyProfile
 import me.pandelis.shush.classes.ShushAPI
@@ -36,6 +39,25 @@ class ChatListActivity: AppCompatActivity() {
     private lateinit var contacts: List<DbContact>
     private var chatList = emptyList<ChatListItem>()
     lateinit var recyclerView: RecyclerView
+
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            mMessageReceiver,
+            IntentFilter("NewMessage")
+        )
+    }
+
+    private val mMessageReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            fetchContactsFroDB()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +97,7 @@ class ChatListActivity: AppCompatActivity() {
 
     public override fun onResume() {
         super.onResume()
-        fetchContactsFroDB()
+        fetchMessagesFromApi()
     }
 
     fun fetchMessagesFromApi() {
@@ -116,11 +138,20 @@ class ChatListActivity: AppCompatActivity() {
 
                     chatList = contactsAndMessages.map { res ->
 
+                        var lastMessage = ""
+                        var timeSinceLastMessage = "never"
+
+                        if(res.messages.count() > 0) {
+                            val lastMsg = res.messages.last()
+                            lastMessage = lastMsg.message
+                            timeSinceLastMessage = DateUtils.getRelativeTimeSpanString(lastMsg.receivedAt.time, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString()
+                        }
+
                         ChatListItem(
                             res.contact.id,
                             Contact(res.contact.id.toString(), res.contact.name),
-                            res.messages.last().message,
-                            DateUtils.getRelativeTimeSpanString(res.messages.last().receivedAt.time, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString(),
+                            lastMessage,
+                            timeSinceLastMessage,
                             600)
                     }
 
@@ -155,9 +186,12 @@ class ChatListActivity: AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_settings -> true
+            R.id.view_key -> {
+                ViewKeyActivity.open(this)
+                true
+            }
             R.id.delete_database -> {
                 this.deleteDatabase("shush.db")
-                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
