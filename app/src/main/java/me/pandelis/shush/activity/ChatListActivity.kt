@@ -24,6 +24,7 @@ import me.pandelis.shush.models.*
 import me.pandelis.shush.services.ShushService
 import me.pandelis.shush.utils.DbWorkerThread
 import java.util.*
+import android.text.format.DateUtils
 
 
 class ChatListActivity: AppCompatActivity() {
@@ -107,18 +108,19 @@ class ChatListActivity: AppCompatActivity() {
 
     fun fetchContactsFroDB() {
         val task = Runnable {
-            contacts = DB?.contactDao()!!.getContacts()
+            val contactsAndMessages = DB?.contactDao()!!.getContactsAndMessages()
 
             mUiHandler.post {
-                if (contacts != null) {
+                if (contactsAndMessages != null) {
                     //initializing the MesasgeList
 
-                    chatList = contacts.map { c ->
+                    chatList = contactsAndMessages.map { res ->
+
                         ChatListItem(
-                            c.id,
-                            Contact(c.id.toString(), c.name),
-                            "2 hours ago",
-                            "19:30",
+                            res.contact.id,
+                            Contact(res.contact.id.toString(), res.contact.name),
+                            res.messages.last().message,
+                            DateUtils.getRelativeTimeSpanString(res.messages.last().receivedAt.time, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString(),
                             600)
                     }
 

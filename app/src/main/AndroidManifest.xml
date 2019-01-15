@@ -22,9 +22,10 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activity.MessageHistoryActivity"
-                android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:name=".activity.MessageHistoryActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".activity.ChatListActivity" />
         </activity>
         <activity
                 android:name=".activity.ChatListActivity"

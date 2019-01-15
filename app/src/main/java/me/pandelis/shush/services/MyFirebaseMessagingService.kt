@@ -20,9 +20,18 @@ import me.pandelis.shush.models.DbContact
 import me.pandelis.shush.models.GetMessage
 import me.pandelis.shush.models.UpdateProfile
 import java.util.*
+import android.support.v4.content.LocalBroadcastManager
+
+
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
+
+    private var broadcaster: LocalBroadcastManager? = null
+
+    override fun onCreate() {
+        broadcaster = LocalBroadcastManager.getInstance(this)
+    }
 
     override fun onNewToken(s: String?) {
         super.onNewToken(s)
@@ -36,6 +45,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+
+        Log.e("NEW MESSAGE", "Recieved a message")
 
         val DB = AppDatabase.getInstance(this)
         val API = ShushAPI.getInstance()
@@ -60,6 +71,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             API?.deleteMessage(m.id)?.execute()
         }
 
+        val newMessageIntent = Intent("NewMessage")
+        newMessageIntent.putExtra("sender", remoteMessage?.data?.get("sender"))
+        newMessageIntent.putExtra("payload", remoteMessage?.notification?.body)
+        broadcaster?.sendBroadcast(newMessageIntent)
 
         val i = Intent(this, ChatListActivity::class.java)
         val notificationId = Random().nextInt(60000)

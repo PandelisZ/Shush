@@ -23,6 +23,16 @@ import me.pandelis.shush.services.ShushService
 import me.pandelis.shush.utils.DbWorkerThread
 import java.util.*
 import kotlin.collections.ArrayList
+import android.content.Intent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.support.v4.content.LocalBroadcastManager
+import android.content.IntentFilter
+
+
+
+
+
 
 class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, MessageInput.AttachmentsListener,
     MessageInput.TypingListener {
@@ -35,12 +45,43 @@ class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, Mes
     private var contactDb: DbContact? = null
     private var contactId: String = "0"
 
+    override fun onStart() {
+        super.onStart()
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            mMessageReceiver,
+            IntentFilter("NewMessage")
+        )
+    }
+
+    private val mMessageReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+
+            if(intent.extras!!.getString("sender") == contactDb?.publicKey) {
+                recievedMessage(intent.extras!!.getString("payload"))
+            }
+        }
+    }
+
+    fun recievedMessage(message: String) {
+        super.messagesAdapter?.addToStart(
+            Message("423", message, Contact(contactDb!!.id.toString(), contactDb!!.name, ""), Date()), true
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_history)
 
         if (intent.extras != null) {
             contactId = intent.extras.getString("contactId")
+            val contactName = intent.extras.getString("contactName")
+            title = contactName
+        }
+
+        // add back arrow to toolbar
+        if (supportActionBar != null){
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+            supportActionBar!!.setDisplayShowHomeEnabled(true)
         }
 
         mDbWorkerThread = DbWorkerThread("dbWorkerThread")
@@ -48,6 +89,7 @@ class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, Mes
 
         DB = AppDatabase.getInstance(this)
         API = ShushAPI.getInstance()
+
 
         this.messagesList = findViewById(R.id.messagesList)
         initAdapter()
@@ -65,6 +107,11 @@ class MessageHistoryActivity : MessageHistory(), MessageInput.InputListener, Mes
             Message("423", input.toString(), Contact(super.senderId, "", ""), Date()), true
         )
         return true
+    }
+
+    override fun onStop() {
+        super.onStop()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
     }
 
     private fun sendMessageToUser(message: String) {

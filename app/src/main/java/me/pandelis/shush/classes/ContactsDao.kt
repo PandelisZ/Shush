@@ -25,6 +25,9 @@ interface ContactsDao {
     @Insert
     fun add(contact: DbContact): Long
 
+    @Query("SELECT * FROM contacts")
+    fun getContactsAndMessages(): List<ContactAllMessages>
+
     @Query("SELECT * FROM contacts WHERE id=:id")
     fun getMessagesForUser(id: Int): ContactAllMessages
 
