@@ -11,6 +11,8 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import me.pandelis.shush.R
 import me.pandelis.shush.activity.ChatListActivity
+import me.pandelis.shush.activity.MainActivity
+import java.util.*
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -29,11 +31,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
 
         val i = Intent(this, ChatListActivity::class.java)
-        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        val notificationId = Random().nextInt(60000)
 
         val pendingIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_ONE_SHOT)
         val notificationBuilder = Notification.Builder(this, "M_CH_ID")
-            .setContentTitle("FCM Notification")
+            .setContentTitle("New Message")
             .setContentText(remoteMessage?.notification?.body)
             .setAutoCancel(true)
             .setSmallIcon(R.mipmap.ic_launcher)
@@ -43,6 +45,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        notificationManager.notify(0, notificationBuilder.build())
+        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 }
