@@ -1,8 +1,7 @@
 package me.pandelis.shush.models
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
+import me.pandelis.shush.entities.MessageEntity
 import java.util.*
 
 @Entity(tableName = "contacts")
@@ -35,3 +34,10 @@ data class DbContact(
         return result
     }
 }
+
+data class ContactAllMessages (
+    @Embedded
+    var contact: DbContact = DbContact("","", null),
+    @Relation(parentColumn = "id", entityColumn = "contactId", entity = MessageEntity::class)
+    var messages: List<MessageEntity> = listOf()
+)

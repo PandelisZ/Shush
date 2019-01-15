@@ -1,19 +1,19 @@
 package me.pandelis.shush.classes
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.migration.Migration
+import android.arch.persistence.room.*
 import android.content.Context
-import me.pandelis.shush.models.Contact
+import me.pandelis.shush.entities.MessageEntity
 import me.pandelis.shush.models.DbContact
 import me.pandelis.shush.models.Profile
+import java.util.Date
 
 @Database(
-    entities = arrayOf(
+    entities = [
         Profile::class,
-        DbContact::class
-    ), version = 3, exportSchema = false )
+        DbContact::class,
+        MessageEntity::class
+    ], version = 3, exportSchema = false )
+@TypeConverters(DateTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
 
@@ -39,4 +39,18 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE = null
         }
     }
+}
+
+class DateTypeConverter {
+
+    @TypeConverter
+    fun fromTimestamp(value: Long?): Date? {
+        return if (value == null) null else Date(value)
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time
+    }
+
 }
